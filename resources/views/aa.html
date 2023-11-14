@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<style>p{text-align:center}#m_flex{display:flex}table{border-spacing:0;border:1px solid #444}td{background:#27ae60;border:1px solid #444;width:60px;height:60px}</style>
+</head>
+<body>
+	<u></u>
+	<div>
+		<div id="m_app">
+			<p>Current turn: <span id="m_turn"></span>'s player</p>
+			<div id="m_flex">
+				<table id="m_board">
+				</table>
+			</div>
+		</div>
+	</div>
+	<script>
+		// Initialize the game board
+		var board = [
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+			[' ', ' ', ' ', 'W', 'B', ' ', ' ', ' '],
+			[' ', ' ', ' ', 'B', 'W', ' ', ' ', ' '],
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+			[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+		];
+		
+		// Initialize the current player
+		var currentPlayer = 'B';
+		
+		// Initialize the game board display
+		var boardDisplay = document.getElementById('m_board');
+		for (var i = 0; i < 8; i++) {
+			var row = document.createElement('tr');
+			for (var j = 0; j < 8; j++) {
+				var cell = document.createElement('td');
+				cell.setAttribute('id', 'cell' + i + j);
+				cell.addEventListener('click', handleCellClick);
+				row.appendChild(cell);
+			}
+			boardDisplay.appendChild(row);
+		}
+		
+		// Initialize the turn display
+		var turnDisplay = document.getElementById('m_turn');
+		turnDisplay.innerText = currentPlayer;
+		
+		// Handle cell clicks
+		function handleCellClick(event) {
+			var row = parseInt(event.target.getAttribute('id')[4]);
+			var col = parseInt(event.target.getAttribute('id')[5]);
+			
+			// Check if the cell is empty
+			if (board[row][col] == ' ') {
+				// Check if the move is legal
+				if (checkLegalMove(row, col, currentPlayer)) {
+					// Make the move
+					board[row][col] = currentPlayer;
+					event.target.style.backgroundColor = currentPlayer == 'B' ? '#000' : '#fff';
+					
+					// Flip opponent pieces
+					flipOpponentPieces(row, col, currentPlayer);
+					
+					// Switch turns
+					currentPlayer = currentPlayer == 'B' ? 'W' : 'B';
+					turnDisplay.innerText = currentPlayer;
+				}
+			}
+		}
+    </script>
+</body>
+</html>
