@@ -3,7 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +19,9 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     //return view('welcome');
-    $users = DB::select("select * from users");
+    //$users = DB::select("select * from users");
 
+    $users = User::find(11);
     // create new user
     // $user = DB::insert('insert into users (name, email, password) values (?,?,?)',[
     //     'Sarthak',
@@ -26,15 +29,22 @@ Route::get('/', function () {
     //     'password',
     // ]);
 
+    // $user = User::create([
+    //     'name'      => 'Sarthak',
+    //     'email'     => 'sarthak4@bitfumes.com',
+    //     'password'  => 'password',
+    // ]);
     // $user = DB::update("update users set email='abc@bitfumes.com' where id=4");
     // $users = DB::delete("delete from users where id=4");
 
-    $titles = DB::table('users')->pluck('name', 'email');
+    // $titles = DB::table('users')->pluck('name', 'email');
  
-    foreach ($titles as $name => $title) {
-        echo $title;
-    }
-    // dd($users);
+    // foreach ($titles as $name => $title) {
+    //     echo $title;
+    // }
+
+    // $users = User::where('id', 1)->first();
+    dd($users->name);
 });
 
 Route::get('/dashboard', function () {
