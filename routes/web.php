@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Profile\AvatarController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
@@ -18,10 +19,10 @@ use Illuminate\Database\Eloquent\Model;
 */
 
 Route::get('/', function () {
-    //return view('welcome');
-    //$users = DB::select("select * from users");
+    // return view('welcome');
+    $users = DB::select("select * from users");
 
-    $users = User::find(11);
+    // $users = User::find(11);
     // create new user
     // $user = DB::insert('insert into users (name, email, password) values (?,?,?)',[
     //     'Sarthak',
@@ -44,7 +45,7 @@ Route::get('/', function () {
     // }
 
     // $users = User::where('id', 1)->first();
-    dd($users->name);
+    dd($users);
 });
 
 Route::get('/dashboard', function () {
@@ -54,6 +55,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('profile/avatar', [AvatarController::class, 'update'])->name('profile.avatar');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
