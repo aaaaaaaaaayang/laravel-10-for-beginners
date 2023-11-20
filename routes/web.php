@@ -22,8 +22,8 @@ use Laravel\Socialite\Facades\Socialite;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    $users = DB::select("select * from users");
+    return view('welcome');
+    // $users = DB::select("select * from users");
 
     // $users = User::find(11);
     // create new user
@@ -48,7 +48,7 @@ Route::get('/', function () {
     // }
 
     // $users = User::where('id', 1)->first();
-    dd($users);
+    // dd($users);
 });
 
 Route::get('/dashboard', function () {
@@ -75,35 +75,17 @@ require __DIR__.'/auth.php';
 //     echo $result->choices[0]->message->content; // Hello! How can I assist you today?
 // });
 
-Route::get('/auth/redirect', function () {
+Route::post('/auth/redirect', function () {
     return Socialite::driver('github')->redirect();
-});
+})->name('login.github');
 
 Route::get('/auth/callback', function () {
-    // $yourModelInstance = User::find(130956046); // Or use any other method to retrieve an instance
-    // dd($yourModelInstance);
-    // $yourModelInstance->update(['column' => 'value']);
-
-    // $user = Socialite::driver('github')->user();
-    // dd($user);
-    // // Find or create a user record in your database
-    // $yourModelInstance = User::firstOrNew(['id' => $user->id]);
-    // dd($yourModelInstance->email);
-    // // Update the user's name
-    // $yourModelInstance->name = 'YANG';
-    
-    // // $yourModelInstance->save();
-    // dd($yourModelInstance);
     $user = Socialite::driver('github')->user();
-    // $name = $user->name;
-    // $yourModelInstance->update(['name' => 'YANG']);
-    // dd($yourModelInstance);
-    // dd($user);
+    
     $user = User::updateOrCreate(['email' => $user->email], [
-        'name' => 'YANG',
+        'name' => $user->name,
         'password' => 'password',
     ]);
-    $user->save();
     
     Auth::login($user);
     
