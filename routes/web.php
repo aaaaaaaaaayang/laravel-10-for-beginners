@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use OpenAI\Laravel\Facades\OpenAI;
+use Laravel\Socialite\Facades\Socialite;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,3 +63,51 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Route::get('/openai',function(){
+//     $result = OpenAI::chat()->create([
+//         'model' => 'gpt-3.5-turbo',
+//         'messages' => [
+//             ['role' => 'user', 'content' => 'Hello!'],
+//         ],
+//     ]);
+
+//     echo $result->choices[0]->message->content; // Hello! How can I assist you today?
+// });
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+});
+
+Route::get('/auth/callback', function () {
+    // $yourModelInstance = User::find(130956046); // Or use any other method to retrieve an instance
+    // dd($yourModelInstance);
+    // $yourModelInstance->update(['column' => 'value']);
+
+    // $user = Socialite::driver('github')->user();
+    // dd($user);
+    // // Find or create a user record in your database
+    // $yourModelInstance = User::firstOrNew(['id' => $user->id]);
+    // dd($yourModelInstance->email);
+    // // Update the user's name
+    // $yourModelInstance->name = 'YANG';
+    
+    // // $yourModelInstance->save();
+    // dd($yourModelInstance);
+    $user = Socialite::driver('github')->user();
+    // $name = $user->name;
+    // $yourModelInstance->update(['name' => 'YANG']);
+    // dd($yourModelInstance);
+    // dd($user);
+    $user = User::updateOrCreate(['email' => $user->email], [
+        'name' => 'YANG',
+        'password' => 'password',
+    ]);
+    $user->save();
+    
+    Auth::login($user);
+    
+    return redirect('/dashboard');
+
+    // $user->token
+});
